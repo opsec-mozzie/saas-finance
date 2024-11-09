@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Transaction {
+  id            String                   @id @default(uuid())
+  name          String
+  type          TransactionType
+  amount        Decimal                  @db.Decimal(10, 2)
+  category      TransactionCategory
+  paymentMethod TransactionPaymentMethod
+  date          DateTime
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @default(now())
+}
+
+enum TransactionType {
+  DEPOSIT
+  EXPENSE
+  INVESTMENT
+}
+
+enum TransactionCategory {
+  // Moradia
+  HOUSING
+  RENT
+  MORTGAGE
+  HOME_INSURANCE
+  HOME_MAINTENANCE
+  FURNITURE
+
+  // Transporte
+  TRANSPORTATION
+  FUEL
+  CAR_MAINTENANCE
+  PUBLIC_TRANSPORT
+  PARKING
+  CAR_INSURANCE
+  RIDE_SHARING
+
+  // Alimentação
+  FOOD
+  GROCERIES
+  RESTAURANTS
+  DELIVERY
+  SNACKS
+
+  // Lazer
+  ENTERTAINMENT
+  STREAMING_SERVICES
+  GAMES
+  MOVIES
+  SPORTS
+  HOBBIES
+  TRAVEL
+
+  // Saúde
+  HEALTH
+  MEDICAL_INSURANCE
+  PHARMACY
+  DOCTOR
+  DENTAL
+  FITNESS
+
+  // Utilidades
+  UTILITY
+  ELECTRICITY
+  WATER
+  GAS
+  INTERNET
+  PHONE
+
+  // Renda
+  SALARY
+  BONUS
+  FREELANCE
+  INVESTMENTS_RETURN
+  RENTAL_INCOME
+
+  // Educação
+  EDUCATION
+  TUITION
+  BOOKS
+  COURSES
+  SCHOOL_SUPPLIES
+
+  // Finanças
+  CREDIT_CARD
+  LOAN_PAYMENT
+  SAVINGS
+  INVESTMENTS
+  INSURANCE
+  TAXES
+
+  // Pessoal
+  CLOTHING
+  PERSONAL_CARE
+  GIFTS
+  DONATIONS
+  PETS
+
+  // Negócios
+  BUSINESS_EXPENSES
+  OFFICE_SUPPLIES
+  MARKETING
+  SOFTWARE_SERVICES
+
+  // Outros
+  OTHER
+  MISCELLANEOUS
+}
+
+enum TransactionPaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
+  BANK_SLIP
+  CASH
+  PIX
+  OTHER
+}
