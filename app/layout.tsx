@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const mulish = Mulish({
-  subsets: ["latin"],
+  subsets: ["latin-ext"],
 });
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body className={`${mulish.className} dark antialiased`}>
         <ClerkProvider appearance={{ baseTheme: dark }}>
           {children}
