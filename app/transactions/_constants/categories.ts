@@ -90,6 +90,70 @@ export const transactionCategoryMap: Record<TransactionCategory, string> = {
   MISCELLANEOUS: "Diversos",
 } as const;
 
+// Grupos de categorias
+export const categoryGroups: Record<string, TransactionCategory[]> = {
+  Moradia: [
+    "HOUSING",
+    "RENT",
+    "MORTGAGE",
+    "HOME_INSURANCE",
+    "HOME_MAINTENANCE",
+    "FURNITURE",
+  ],
+  Transporte: [
+    "TRANSPORTATION",
+    "FUEL",
+    "CAR_MAINTENANCE",
+    "PUBLIC_TRANSPORT",
+    "PARKING",
+    "CAR_INSURANCE",
+    "RIDE_SHARING",
+  ],
+  Alimentação: ["FOOD", "GROCERIES", "RESTAURANTS", "DELIVERY", "SNACKS"],
+  Lazer: [
+    "ENTERTAINMENT",
+    "STREAMING_SERVICES",
+    "GAMES",
+    "MOVIES",
+    "SPORTS",
+    "HOBBIES",
+    "TRAVEL",
+  ],
+  Saúde: [
+    "HEALTH",
+    "MEDICAL_INSURANCE",
+    "PHARMACY",
+    "DOCTOR",
+    "DENTAL",
+    "FITNESS",
+  ],
+  Utilidades: ["UTILITY", "ELECTRICITY", "WATER", "GAS", "INTERNET", "PHONE"],
+  Renda: [
+    "SALARY",
+    "BONUS",
+    "FREELANCE",
+    "INVESTMENTS_RETURN",
+    "RENTAL_INCOME",
+  ],
+  Educação: ["EDUCATION", "TUITION", "BOOKS", "COURSES", "SCHOOL_SUPPLIES"],
+  Finanças: [
+    "CREDIT_CARD",
+    "LOAN_PAYMENT",
+    "SAVINGS",
+    "INVESTMENTS",
+    "INSURANCE",
+    "TAXES",
+  ],
+  Pessoal: ["CLOTHING", "PERSONAL_CARE", "GIFTS", "DONATIONS", "PETS"],
+  Negócios: [
+    "BUSINESS_EXPENSES",
+    "OFFICE_SUPPLIES",
+    "MARKETING",
+    "SOFTWARE_SERVICES",
+  ],
+  Outros: ["OTHER", "MISCELLANEOUS"],
+} as const;
+
 // Helper function para obter o label traduzido
 export const getCategoryLabel = (category: TransactionCategory): string => {
   return transactionCategoryMap[category];
