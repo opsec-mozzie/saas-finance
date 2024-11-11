@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { ArrowDownUpIcon } from "lucide-react";
 import {
@@ -31,7 +31,6 @@ import {
   TransactionPaymentMethod,
   TransactionType,
 } from "@prisma/client";
-import MoneyInput from "./money-input";
 import {
   Select,
   SelectContent,
@@ -46,16 +45,15 @@ import {
   transactionCategoryMap,
 } from "../transactions/_constants/categories";
 import { DatePicker } from "./ui/date-picker";
+import MoneyInput from "./money-input";
+import { addTransaction } from "../_actions/add-transaction";
 
 const formSchema = z.object({
   name: z
     .string()
     .trim()
     .min(1, { message: "O nome da transação é obrigatório" }),
-  amount: z
-    .string()
-    .trim()
-    .min(1, { message: "O valor da transação é obrigatório" }),
+  amount: z.number().positive(),
   type: z
     .nativeEnum(TransactionType, {
       required_error: "O tipo da transação é obrigatório",
@@ -64,31 +62,37 @@ const formSchema = z.object({
   category: z.nativeEnum(TransactionCategory, {
     required_error: "A categoria é obrigatória",
   }),
-  paymenthMethod: z.nativeEnum(TransactionPaymentMethod, {
+  paymentMethod: z.nativeEnum(TransactionPaymentMethod, {
     required_error: "O metodo de pagamento é obrigatório",
   }),
   date: z.date({ required_error: "A data é obrigatória" }).default(new Date()),
 });
 
-// type FormData = z.infer<typeof formSchema>;
-
 type formSchema = z.infer<typeof formSchema>;
 
 const AddTransactionButton = () => {
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+
   const form = useForm<formSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      amount: "",
+      amount: 10,
       type: TransactionType.EXPENSE,
       category: TransactionCategory.OTHER,
-      paymenthMethod: TransactionPaymentMethod.PIX,
+      paymentMethod: TransactionPaymentMethod.PIX,
       date: new Date(),
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log({ data });
+  const onSubmit = async (data: formSchema) => {
+    try {
+      await addTransaction(data);
+      setDialogIsOpen(false);
+      form.reset();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const groupedOptions = Object.entries(categoryGroups).map(
@@ -106,7 +110,9 @@ const AddTransactionButton = () => {
 
   return (
     <Dialog
+      open={dialogIsOpen}
       onOpenChange={(open) => {
+        setDialogIsOpen(open);
         if (!open) {
           form.reset();
         }
@@ -134,19 +140,6 @@ const AddTransactionButton = () => {
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
                     <Input placeholder="Nome da transação" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Valor</FormLabel>
-                  <FormControl>
-                    <MoneyInput placeholder="R$ 0,00 " {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -218,7 +211,7 @@ const AddTransactionButton = () => {
 
             <FormField
               control={form.control}
-              name="paymenthMethod"
+              name="paymentMethod"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Método de Pagamento</FormLabel>
@@ -239,6 +232,31 @@ const AddTransactionButton = () => {
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Valor</FormLabel>
+                  <FormControl>
+                    <MoneyInput
+                      placeholder="Digite o valor..."
+                      onValueChange={({
+                        floatValue,
+                      }: {
+                        floatValue: number;
+                      }) => {
+                        field.onChange(floatValue);
+                      }}
+                      onBlur={field.onBlur}
+                      disabled={field.disabled}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
