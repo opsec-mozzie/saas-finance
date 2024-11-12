@@ -1,16 +1,16 @@
-import { UserButton } from "@clerk/nextjs";
+import React from "react";
+import Navbar from "../_components/navbar";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-const Home = async () => {
+const Subscription = async () => {
   const { userId } = await auth();
   if (!userId) redirect("/login");
-
   return (
-    <div className="flex h-full items-center justify-center">
-      <UserButton showName />
+    <div>
+      <Navbar />
     </div>
   );
 };
 
-export default Home;
+export default Subscription;
